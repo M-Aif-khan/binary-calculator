@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+ 
+    <center>
+        <div class="main">
+            <div class="calculator">
+                <input type="text" placeholder="number1" class="input-1-js"><br><br>
+                <input type="text" placeholder="number2" class ="input-2-js"><br><br>
+                <select name="arthimatic-option" id="operation">
+                    <option value="add">Addition</option>
+                    <option value="subtract">Subtraction</option>
+                    <option value="multiply">Multiplication</option>
+                    <option value="divide">Division</option>
+                </select>
+                <br><br>
+                <button class="calculate-btn">Calculte</button><br><br>
+                <br><br>
+                <div class="output-js"></div>
+            </div>
+    
+        </div>
+
+    </center>
+
+
+    <script>
+        const buttonElement = document.querySelector(".calculate-btn");
+        const outputElement = document.querySelector(".output-js");
+
+        function takeBinaryInput(string){
+            let num = 0;
+            string = string.split('').reverse();
+            let weight = 0;
+            string.forEach((bit)=>{
+                if(bit === "1"){
+                    num+= Math.pow(2,weight);
+                }
+                weight++;
+            });
+
+            return num;
+        }
+
+
+        function convertToDecimal(num){
+            let numStr = '';
+            let tempNum = num;
+            while(tempNum != 0){
+                numStr+=(tempNum % 2);
+                tempNum = Math.floor(tempNum / 2);;
+            }
+            numStr = numStr.split('').reverse().join('');
+            return numStr;
+        }
+
+
+        function arithimaticOperation(num1,num2){
+            const select = document.querySelector("#operation");
+            const option = select.value;
+            let answer = 0;
+            if(option === "add"){
+                answer = num1+num2;
+            }
+            else if(option === "subtract"){
+                answer = num1 - num2;
+            }
+            else if(option === "multiply"){
+                answer = num1*num2;
+            }
+            else if(option === "divide"){
+                answer = Math.floor(num1/num2);
+                
+            }
+    
+            return answer;
+        }
+
+
+        function convertTo8Bits(num){
+            let strNum ='00000000';
+            
+            for(let bit = 0; bit < 8;bit++ ){
+                if(bit< num.length){
+                    strNum += num[bit];
+                }
+                else{
+                    strNum[bit] = '0';
+                }
+    
+            }
+            strNum = strNum.split('').reverse().slice(0,8).join('');
+            strNum = strNum.split('').reverse().join('');
+            return strNum;
+
+        }
+
+
+        function twosComplement(num){
+            let strNum ='';
+            strNum =  convertTo8Bits(num);
+            console.log("Main number: "+strNum)
+            let  onesComp = '';
+            for(let bit = 0;bit < 8;bit++ ){
+                if(strNum[bit] ==='1') {
+                    console.log(strNum[bit]);
+                    onesComp+='0';
+                }
+                else if(strNum[bit] === '0'){
+                    console.log(strNum[bit]);
+                    onesComp+='1';
+                }   
+            }
+
+            return onesComp;
+
+        }
+
+
+        // string in javascripts are immutable 
+        function main(){
+
+            const num1Element = document.querySelector(".input-1-js");
+            const num2Element = document.querySelector(".input-2-js");
+            let num1 = takeBinaryInput(num1Element.value);
+            let num2 = takeBinaryInput(num2Element.value);
+    
+            if(num1 < num2 && document.querySelector("#operation").value === "subtract"){
+                // alert("Not valid input");
+                console.log("Ones complement of number1 : "+twosComplement(num1Element.value))
+            }
+            else{
+                let answer = arithimaticOperation(num1,num2);
+            
+                outputElement.innerHTML =  `
+                    Output: ${convertToDecimal(answer)}
+                `;
+            }
+        }
+
+
+        buttonElement.addEventListener("click",()=>{
+            main();
+        })
+    </script>
+</body>
+</html>
